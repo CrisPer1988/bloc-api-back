@@ -8,7 +8,7 @@ const catchAsync = require('../utils/catchAsync');
 const generateJWT = require('../utils/jwt');
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, role, description } = req.body;
+  const { name, email, password, role, description, profileImgUrl } = req.body;
 
   const imgRef = ref(storage, `users/${Date.now()}-${req.file.originalname}`);
   const imgUploaded = await uploadBytes(imgRef, req.file.buffer);
