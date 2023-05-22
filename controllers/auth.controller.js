@@ -8,10 +8,10 @@ const catchAsync = require('../utils/catchAsync');
 const generateJWT = require('../utils/jwt');
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, role, description,profileImgUrl } = req.body;
+  const { name, email, password, role, description } = req.body;
 
-  // const imgRef = ref(storage, `users/${Date.now()}-${req.file.originalname}`);
-  // const imgUploaded = await uploadBytes(imgRef, req.file.buffer);
+   const imgRef = ref(storage, `users/${Date.now()}-${req.file.originalname}`);
+   const imgUploaded = await uploadBytes(imgRef, req.file.buffer);
 
   const salt = await bcrypt.genSalt(12);
   const encryptedPassword = await bcrypt.hash(password, salt);
@@ -22,7 +22,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: encryptedPassword,
     description,
     role,
-    profileImgUrl //imgUploaded.metadata.fullPath,
+    profileImgUrl: imgUploaded.metadata.fullPath,
   });
 
   const token = await generateJWT(user.id);
@@ -67,8 +67,8 @@ exports.login = catchAsync(async (req, res, next) => {
   //4. generar el jsonwebtoken
   const token = await generateJWT(user.id);
 
-  // const imgRef = ref(storage, user.profileImgUrl);
-  // const url = await getDownloadURL(imgRef);
+   const imgRef = ref(storage, user.profileImgUrl);
+   const url = await getDownloadURL(imgRef);
 
   //5 enviar la respuesta al cliente
   res.status(200).json({
@@ -79,7 +79,7 @@ exports.login = catchAsync(async (req, res, next) => {
       name: user.name,
       email: user.email,
       description: user.description,
-     //profileImgUrl: url,
+      profileImgUrl: url,
       role: user.role,
     },
   });
