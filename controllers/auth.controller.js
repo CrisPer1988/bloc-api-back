@@ -67,8 +67,8 @@ exports.login = catchAsync(async (req, res, next) => {
   //4. generar el jsonwebtoken
   const token = await generateJWT(user.id);
 
-  const imgRef = ref(storage, user.profileImgUrl);
-  const url = await getDownloadURL(imgRef);
+  // const imgRef = ref(storage, user.profileImgUrl);
+  // const url = await getDownloadURL(imgRef);
 
   //5 enviar la respuesta al cliente
   res.status(200).json({
